@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Ubuntu');
+  * {
+    font-family: 'Ubuntu', sans-serif;
+  }
+</style>
+  <head>
+    <title>Avance</title>
+  </head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <a class="navbar-brand" href="/"><img class="logo" src="/css/avance_images/Alogo.png"></a>
+        <a class="search-projects" href="/search">Search Projects</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-target="dropdown_target" href="#">
+              Discover
+              <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown_target">
+              <a class="dropdown-item" href="/explore/mission">Our mission</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/explore/team">Our team</a>
+              <a class="dropdown-item" href="/explore/support">Support</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Explore</a>
+          </li>
+          <% if (user) { %>
+            <li>
+              <a class="nav-link" href="/<%=user.username%>">Dashboard</a>
+            </li>
+            <li>
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          <% }  else{ %>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          <% } %>
+        </ul>
+    </div>
+    </nav>
+
+    <%- messages('my_message_template', locals) %>
+
+
+    <div class="container">
+      <ul class="progressbar">
+        <li class="active">Login</li>
+        <li class="active">Dashboard</li>
+        <li class="active">Project</li>
+      </ul>
+    </div>
+    <% if (image) {%>
+    <div class="container"><br>
+      <hr>
+      <h1><%-image.name%></h1>
+
+      <p class="by-line">by <%-project.author%></p>
+      <%if (user && (user.username == project.author)) {%>
+      <div class="edit_and_delete">
+        <a href="/image/<%=image.project_id%>/<%=image._id%>/edit"/><button class="btn btn-primary btn-default" value="Edit"/>Edit</button></a>
+        <a class="delete-image"><button class="btn btn-danger btn-default" data-id=<%=image._id%> data-project=<%=image.project_id%>>Delete</button></a>
+      </div>
+      <%}%>
+      <div class="display-image">
+        <% if (image.filename != "NOFILE"){ %>
+        <img src="https://frozen-gorge-63424.herokuapp.com/grid-images/<%=image.project_id%>/<%=image._id%>/grid/<%=image.filename%>" alt="image alt">
+        <% } else {%>
+        <p> (No picture was uploaded) </p>
+        <% } %>
+        <div class="image-description">
+          <p class="project-desc">Description</p>
+          <p><%-image.imageDescription%></p>
+        </div>
+        <div class="image-info">
+          <p></p>
+        </div><br/>
+        <!--<p class="project-desc">Comments</p>
+        <div class="comments"><br/>
+          <div class="comment-box">
+            <p class="comment">Great work!</p>
+            <p class="commenter">Hiruko Mimi</p>
+            <input class="reply" type="text" value=" Leave a reply"/>
+            <input class="btn reply-btn" type="button" value="Reply"/>
+          </div>
+        </div>-->
+      </div>
+      <%} else { %>
+      <p>Image not found!</p>
+      <%}%>
+
+
+      <footer>
+        <p>Copyright &copy; 2018</p>
+      </footer>
+    </div>
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/js/image_delete.js"></script>
+    <script src="/js/project_image.js"></script>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+  </body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Ubuntu');
+  * {
+    font-family: 'Ubuntu', sans-serif;
+  }
+</style>
+  <head>
+    <title>Avance</title>
+  </head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <a class="navbar-brand" href="/"><img class="logo" src="/css/avance_images/Alogo.png"></a>
+        <a class="search-projects" href="/search">Search Projects</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-target="dropdown_target" href="#">
+              Discover
+              <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown_target">
+              <a class="dropdown-item" href="/explore/mission">Our mission</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/explore/team">Our team</a>
+              <a class="dropdown-item" href="/explore/support">Support</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Explore</a>
+          </li>
+          <% if (user) { %>
+            <li>
+              <a class="nav-link" href="/<%=user.username%>">Dashboard</a>
+            </li>
+            <li>
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          <% }  else{ %>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          <% } %>
+        </ul>
+    </div>
+    </nav>
+
+    <%- messages('my_message_template', locals) %>
+
+
+    <div class="container">
+      <ul class="progressbar">
+        <li class="active">Login</li>
+        <li class="active">Dashboard</li>
+        <li class="active">Project</li>
+      </ul>
+    </div>
+    <div class="container"><br>
+      <div class="container"><br>
+        <!-- <h1><%=project.name%></h1>
+        <p class="by-line"><%=project.author%></p>
+        <p><%=project.description%></p> -->
+        <h1><%=project.name%></h1>
+        <p class="by-line">by <%-project.author%></p>
+        <p><%=project.description%></p>
+        <%if (user && (user.username == project.author)) {%>
+        <input class="btn btn-primary" type="button" value="Add to timeline"
+               onclick="location.href='/image/<%=user.username%>/<%=project._id%>/new/upload';"/>
+        <div class="edit_and_delete">
+          <a class="delete-project"><button class="btn btn-danger btn-default" data-id=<%=project._id%> data-name=<%=user.username%>>Delete</button></a>
+        </div>
+        <%}%>
+      </div>
+
+
+      <!--
+      Note: Overall structure for the code was taken from free, open-source websites. The code is NOT an exact copy of the open-source code, as adaptions were made regarding the implementation, but a large percentage of our code remains identical to the source.
+
+      Code for this timeline was taken from https://codepen.io/melnik909/pen/qPjwvq, from the website, http://freefrontend.com/css-timelines/#horizontal-timelines, which lists 58 different types of free timelines. This code has been adjusted to fit in with our website, but by and large it remains the same.
+
+      A tutorial on how to implement and create a timeline was also followed in the creation of this code: https://www.youtube.com/watch?v=eEybqzuh6Z0. While they use different timelines, the final implementation takes aspects from both.
+     -->
+
+
+      <div class="page">
+
+        <div class="page__demo">
+          <div class="main-container page__container">
+            <%var curr = 0%>
+            <% if (images){ %>
+            <% images.forEach(function(image) { %>
+            <div class="timeline_norm">
+
+              <div class="timeline__group">
+                <% if (image.uploadYear && (image.uploadYear>curr)) { %>
+                <span class="timeline__year"><%-image.uploadYear%></span>
+                <%curr = image.uploadYear%>
+                <%}%>
+                <div class="timeline__box">
+                  <div class="timeline__date">
+                    <span class="timeline__day"><%=image.uploadDay%></span>
+                    <span class="timeline__month"><%-image.uploadMonth%></span>
+
+                  </div>
+                  <div class="timeline__post">
+                    <div class="timeline__content">
+                      <p onclick="window.location='/image/<%= project._id%>/<%=image._id%>';"><%-image.imageDescription%></p>
+                      <% if (image.filename != "NOFILE"){ %>
+                      <div class="dropdown-divider"></div>
+                      <div class="timeline-image" onclick="window.location='/image/<%= project._id%>/<%=image._id%>';">
+                        <img class="img-scale" src="https://frozen-gorge-63424.herokuapp.com/grid-images/<%=project._id%>/<%=image._id%>/grid/<%=image.filename%>" alt="image alt">
+                      </div>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <%})%>
+            <% } else {%>
+            <p>Empty Project!</p>
+            <%}%>
+          </div>
+
+
+          <% if (comments){ %>
+            <% comments.forEach(function(comment) { %>
+            <div class="comment-box">
+              <div class="comment-body">
+                <p><%=comment.body%></p>
+              </div>
+              <div class="comment-author">
+                <p>-<%=comment.author%></p>
+              </div>
+            </div>
+            <% }) %>
+          <% } %>
+
+
+          <form class="uploadComm" action="/comments/<%=project.author%>/<%= project._id%>/addcomment" method="POST">
+            <input type="hidden" value="<%=project._id%>" name="project_id"/>
+
+            <%if (user) {%>
+            <input type="hidden" value="<%=user.username%>" name="comment_author"/>
+            <%} else {%>
+            <input type="hidden" value="anonymous" name="comment_author"/>
+            <% } %>
+            <textarea class="uploadComm-Textarea" name="body"  placeholder="comments"/></textarea>
+            <input class="uploadComm-Submit" type="submit" value="Comment"/>
+          </form>
+        </div>
+      </div>
+
+
+      <footer>
+        <div class="additional__note">
+          <p>Note: Code was adapted and built from open-sourced software. You can find additional timelines like this from <a href="http://freefrontend.com/css-timelines/#horizontal-timelines">here</a> and the timeline we originally used <a href="https://codepen.io/melnik909/pen/qPjwvq">here</a></p>
+        </div>
+        <p>Copyright &copy; 2018</p>
+      </footer>
+    </div>
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/js/project_delete.js"></script>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+  </body>
+</html>

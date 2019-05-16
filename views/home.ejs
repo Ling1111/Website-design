@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Ubuntu');
+    * {
+      font-family: 'Ubuntu', sans-serif;
+    }
+  </style>
+
+  <head>
+    <title>Avance</title>
+  </head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <a class="navbar-brand" href="/"><img class="logo" src="/css/avance_images/Alogo.png"></a>
+        <a class="search-projects" href="/search">Search Projects</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-target="dropdown_target" href="#">
+              Discover
+              <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown_target">
+              <a class="dropdown-item" href="/explore/mission">Our mission</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/explore/team">Our team</a>
+              <a class="dropdown-item" href="/explore/support">Support</a>
+
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Explore</a>
+          </li>
+          <% if (user) { %>
+            <li>
+              <a class="nav-link" href="/<%=user.username%>">Dashboard</a>
+            </li>
+            <li>
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          <% }  else{ %>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          <% } %>
+        </ul>
+    </div>
+    </nav>
+
+    <!-- Progress Bar -->
+    <div class="container">
+      <ul class="progressbar">
+        <li class="active">Explore</li>
+        <li>Project</li>
+        <li>Image</li>
+      </ul>
+    </div>
+    <!-- ============ -->
+
+    <%- messages('my_message_template', locals) %>
+
+    <div class="container"><br>
+      <h1> Our Stories </h1>
+      <!-- Code here -->
+      <div class="basic-info">
+        <div class="updating-info">
+          Nurture. Create.
+        </div>
+        <div class="updating-info num-users">
+        </div>
+        <div class="updating-info num-completed">
+        </div>
+        <div class="updating-info num-developing">
+        </div>
+      </div>
+
+      <div class="featured-projects">
+        <div id="arrow-left" class="arrow"></div>
+        <div id="arrow-right" class="arrow"></div>
+        <div id="slider">
+          <div class="slide slide1">
+            <div class="slide-content">
+              <a href="/explore/5/5">
+                <span> Autumn Adventure </span>
+              </a>
+            </div>
+          </div>
+          <div class="slide slide2">
+            <div class="slide-content">
+              <a href="/explore/5/5">
+                <span> the Vast Sea </span>
+              </a>
+            </div>
+          </div>
+          <div class="slide slide3">
+            <div class="slide-content">
+              <a href="/explore/5/5">
+                <span> the Canyon </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <h2> Explore Projects </h2>
+      <div class="all-projects">
+
+        <% if (projects) { %>
+          <% projects.forEach(function(project){ %>
+          <div class="featured-project">
+            <!--<li><a href="/projects/EJS PROJECT ID PROJECT NAME HERE</a></li>-->
+            <div class="explore-title"><%-project.name%></div>
+            <% if (images){ %>
+              <% images.forEach(function(image){ %>
+                <% if (image.length > 0){ %>
+                  <% if (image[0].project_id == project._id){ %>
+                  <div class="timeline-image">
+                    <% if (image[0].filename != "NOFILE"){ %>
+                    <div class="dropdown-divider"></div>
+                    <div class="explore-image" id="explore-image" onclick="window.location='/explore/<%= project.author%>/<%=project._id%>';">
+                      <img src="https://frozen-gorge-63424.herokuapp.com/grid-images/<%=project._id%>/<%=image[0]._id%>/grid/<%=image[0].filename%>" alt="image alt">
+                    </div>
+                    <% } %>
+                  </div>
+                  <% } %>
+                <% } %>
+              <% }); %>
+            <% } %>
+          </div>
+          <% }); %>
+        <% }%>
+
+        <!--<div class="box2 openBtn" id="explore_proj_2">
+          <p> Summer girl</p>
+        </div>
+        <div class="box3 openBtn" id="explore_proj_3">
+          <p> the Grampians</p>
+        </div>
+        <div class="box4 openBtn" id="explore_proj_4">
+          <p> It's not me</p>
+        </div>
+        <div class="box5 openBtn" id="explore_proj_5">
+          <p> Dark Flower </p>
+        </div>
+        <div class="box6 openBtn" id="explore_proj_6">
+          <p> Aerial Sky </p>
+        </div>
+        <div class="box7 openBtn" id="explore_proj_7">
+          <p> Home Away </p>
+        </div>
+        <div class="box8 openBtn" id="explore_proj_8">
+          <p> Cloudy Smile </p>
+        </div>
+        <div class="box9 openBtn" id="explore_proj_9">
+          <p> Photos in the Wild</p>
+        </div>-->
+      </div>
+
+      <!-- Modal -->
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <!-- Modal content-->
+          <div class="modal-content">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+    <footer>
+      <p>Copyright &copy; 2018</p>
+    </footer>
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/js/explore-image.js"></script>
+  </body>
+  <script src="/js/explore_modal.js"></script>
+  <script type="text/javascript">
+  (function() {
+
+  var img = document.getElementById('explore-image').firstChild;
+  img.onload = function() {
+      if(img.height > img.width) {
+          img.height = '100%';
+          img.width = 'auto';
+      }
+  };
+
+  }());
+  </script>
+</html>

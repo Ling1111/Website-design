@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<style>
+  @import url('https://fonts.googleapis.com/css?family=Ubuntu');
+  * {
+    font-family: 'Ubuntu', sans-serif;
+  }
+</style>
+  <head>
+    <title>Avance</title>
+  </head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <a class="navbar-brand" href="/"><img class="logo" src="/css/avance_images/Alogo.png"></a>
+        <a class="search-projects" href="/search">Search Projects</a>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" data-target="dropdown_target" href="#">
+              Discover
+              <span class="caret"></span>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdown_target">
+              <a class="dropdown-item" href="/explore/mission">Our mission</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/explore/team">Our team</a>
+              <a class="dropdown-item" href="/explore/support">Support</a>
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Explore</a>
+          </li>
+          <% if (user) { %>
+            <li>
+              <a class="nav-link" href="/<%=user.username%>">Dashboard</a>
+            </li>
+            <li>
+              <a class="nav-link" href="/logout">Logout</a>
+            </li>
+          <% }  else{ %>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+          <% } %>
+        </ul>
+    </div>
+    </nav>
+
+    <%- messages('my_message_template', locals) %>
+
+
+    <!-- Progress Bar -->
+    <div class="container">
+      <ul class="progressbar">
+        <li class="active">Explore</li>
+        <li>Project</li>
+        <li>Image</li>
+      </ul>
+    </div>
+    <div class="container"><br>
+      <!-- Code here -->
+      <h1><%=author.name%></h1>
+      <p> Note: if the dashboard isn't loading, please reload the page :) </p>
+      <% if (projects) { %>
+
+        <ul>
+        <% projects.forEach(function(project){ %>
+          <!--<li><a href="/projects/EJS PROJECT ID PROJECT NAME HERE</a></li>-->
+          <% if (user) { %>
+            <li><a href="/<%=author.username%>/<%=project._id%>"><%-project.name%></a></li>
+            <% if (images){ %>
+              <% images.forEach(function(image){ %>
+                <% if (image[0].project_id == project._id){ %>
+                <div class="dashboard">
+                  <% if (image[0].filename != "NOFILE"){ %>
+                  <div class="dropdown-divider"></div>
+                  <div class="dashboard-image" onclick="window.location='/image/<%= project._id%>/<%=image[0]._id%>';">
+                    <img src="https://frozen-gorge-63424.herokuapp.com/grid-images/<%=project._id%>/<%=image[0]._id%>/grid/<%=image[0].filename%>" alt="image alt">
+                  </div>
+                  <% } %>
+                </div>
+                <% } %>
+              <% }); %>
+            <% } %>
+          <% } else { %>
+            <li><a href="/explore/<%=author.username%>/<%=project._id%>"><%-project.name%></a></li>
+          <%}%>
+        <% }); %>
+        </ul>
+      <% }%>
+      <% if (user && (user.username == author.username)) { %>
+        <ul>
+          <a class="btn btn-primary" href="/<%=author.username%>/newproject">New Project</a>
+        </ul>
+      <% } %>
+      <footer>
+        <p>Copyright &copy; 2018</p>
+      </footer>
+    </div>
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="/js/main.js"></script>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/css/style.css">
+  </body>
+</html>
